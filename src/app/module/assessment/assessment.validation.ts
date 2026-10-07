@@ -3,7 +3,7 @@ import { z } from "zod";
 export const AssessmentValidation = {
   createAssessmentSchema: z.object({
     title: z.string({ message: "Title is required" }).min(1, "Title cannot be empty"),
-    description: z.string().optional(), // পেলোডে description পাঠাচ্ছেন, তাই এটি যোগ করুন
+    description: z.string().optional(), 
     durationMinutes: z.number({ message: "Duration is required" }).positive("Duration must be positive"),
     totalMarks: z.number({ message: "Total marks is required" }).positive("Total marks must be positive"),
     passMarks: z.number({ message: "Pass marks is required" }).positive("Pass marks must be positive"),
