@@ -16,16 +16,7 @@ export const getBkashIdToken = async () => {
 
 		
 
-		// console.log({
-		//     bkashIdToken,
-		//     bkashIdTokenTTL,
-		//     bkashRefreshToken,
-		//     bkashRefreshTokenTTL
-		// });
-
-		//bkash id token remaining time is less than equal 10 minutes or bkash id is expired
-		// bkash refresh token must exist
-		// bkash refresh token remaining time is more than 10 minutes
+		
 		if (
 			(bkashIdTokenTTL <= 600 || !bkashIdToken) &&
 			bkashRefreshToken &&
