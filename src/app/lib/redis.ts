@@ -13,12 +13,12 @@ export const redisClient = createClient({
                 console.error("Redis: Max reconnect attempts reached");
                 return new Error("Redis connection failed");
             }
-            return Math.min(retries * 100, 3000); // ১০০ms ব্যবধানে পুনরায় চেষ্টার লজিক
+            return Math.min(retries * 100, 3000); 
         },
     },
 });
 
-// ⚠️ সবচেয়ে গুরুত্বপূর্ণ অংশ: এটি থাকলে সকেট ড্রপ হলেও সার্ভার ক্র্যাশ করবে না
+
 redisClient.on("error", (err) => {
     console.warn("⚠️ Redis Client Warning:", err.message);
 });
