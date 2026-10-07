@@ -60,18 +60,16 @@ export const globalErrorHandler = async (
         errorMessage = "Error occurred during database query execution";
     }
 
-    // ৩. কাস্টম অ্যাপ এরর
     else if (err instanceof AppError) {
         statusCode = err.statusCode;
         errorMessage = err.message;
     }
 
-    // ৪. সাধারণ এরর
+
     else if (err instanceof Error) {
         errorMessage = err.message;
     }
 
-    // রিকোয়ারমেন্টের সাথে সামঞ্জস্যপূর্ণ রেসপন্স ফরম্যাট
     res.status(statusCode).json({
         success: false,
         statusCode,
