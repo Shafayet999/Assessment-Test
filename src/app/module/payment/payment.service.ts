@@ -11,7 +11,7 @@ const initiatePayment = async (userId: string, payload: ICreatePaymentPayload) =
 
 
   const invoiceNumber = `INV-${Date.now()}`;
-  const callbackURL = `http://localhost:5000/api/v1/payments/callback`;
+  const callbackURL = `https://coding-platform-henna.vercel.app/api/v1/payments/callback`;
 
   const response = await fetch(
     "https://tokenized.sandbox.bka.sh/v2/tokenized-checkout/payment/create",
