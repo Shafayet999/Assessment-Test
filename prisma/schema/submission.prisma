@@ -1,0 +1,16 @@
+model Submission {
+  id                    String              @id @default(uuid())
+  candidateAssessmentId String
+  questionId            String
+  answerText            String              // কোড বা লিখিত উত্তর বা সিলেক্টেড অপশন
+  obtainedMarks         Float?              @default(0)
+  isEvaluated           Boolean             @default(false)
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  candidateAssessment   CandidateAssessment @relation(fields: [candidateAssessmentId], references: [id], onDelete: Cascade)
+  question              Question            @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([candidateAssessmentId, questionId])
+  @@map("submissions")
+}

@@ -1,0 +1,19 @@
+model Payment {
+  id              String        @id @default(uuid())
+  userId          String        // কোন Recruiter পে করল
+  amount          Float
+  currency        String        @default("BDT")
+  paymentGateway  String        @default("bKash")
+  transactionId   String?       @unique // bKash trxID
+  paymentID       String?       @unique // bKash paymentID
+  status          PaymentStatus @default(PENDING)
+  creditsPurchased Int          @default(5) // কতগুলো অ্যাসেসমেন্ট ক্রেডিট পেল
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("payments")
+}

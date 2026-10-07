@@ -1,0 +1,22 @@
+model CandidateAssessment {
+  id           String                    @id @default(uuid())
+  candidateId  String
+  assessmentId String
+  status       CandidateAssessmentStatus @default(INVITED)
+  startedAt    DateTime?
+  submittedAt  DateTime?
+  totalScore   Float?                    @default(0)
+  feedback     String?                   // Recruiter manual review feedback
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+
+  // Relationships
+  candidate    User         @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  assessment   Assessment   @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  submissions  Submission[]
+
+  @@unique([candidateId, assessmentId]) // একজন ক্যান্ডিডেট একটি অ্যাসেসমেন্টে একবারই অংশ নেবে
+  @@index([candidateId])
+  @@index([assessmentId])
+  @@map("candidate_assessments")
+}

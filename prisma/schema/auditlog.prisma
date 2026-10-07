@@ -1,0 +1,14 @@
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?  // কে অ্যাকশনটি করেছে
+  action    String   // যেমন: "USER_ROLE_UPDATED", "ASSESSMENT_DELETED"
+  entity    String   // যেমন: "User", "Assessment", "Payment"
+  entityId  String   // যে রেকর্ডে পরিবর্তন হয়েছে তার ID
+  details   Json?    // পরিবর্তনের আগের ও পরের ডেটা
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@map("audit_logs")
+}
