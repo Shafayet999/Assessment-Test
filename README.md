@@ -1,5 +1,5 @@
 Developer Assessment & Coding Platform Backend
-Live Base URL: [https://coding-platform-henna.vercel.app/api/v1](https://coding-platform-henna.vercel.app/api/v1)
+
 
 Health Check Endpoint: [https://coding-platform-henna.vercel.app/](https://coding-platform-henna.vercel.app/)
 
