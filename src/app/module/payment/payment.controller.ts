@@ -22,20 +22,31 @@ const initiatePayment = async (req: Request, res: Response) => {
   }
 };
 
+// src/app/modules/payment/payment.controller.ts
+
 const handleCallback = async (req: Request, res: Response) => {
+  const clientUrl = "http://localhost:3000";
+
   try {
     const result = await PaymentService.handleCallback(req.query as any);
-    return res.status(200).json({
-      success: result.success,
-      message: result.message,
-      data: result,
-    });
+
+    if (result.success) {
+      // ✅ সফল হলে Success পেজে রিডাইরেক্ট
+      return res.redirect(
+        `${clientUrl}/recruiter/billing/success?trxId=${result.trxId || ""}`
+      );
+    } else {
+      // ❌ ইউজার ক্যানসেল বা ফেইল করলে Cancel পেজে রিডাইরেক্ট
+      return res.redirect(
+        `${clientUrl}/recruiter/billing/cancel?reason=${result.status || "cancelled"}`
+      );
+    }
   } catch (error: any) {
-    return res.status(400).json({
-      success: false,
-      message: error.message || "Callback processing failed",
-      errors: [{ path: "handleCallback", message: error.message }],
-    });
+    return res.redirect(
+      `${clientUrl}/recruiter/billing/cancel?reason=error&message=${encodeURIComponent(
+        error.message || "Payment processing failed"
+      )}`
+    );
   }
 };
 
