@@ -25,7 +25,7 @@ const initiatePayment = async (req: Request, res: Response) => {
 // src/app/modules/payment/payment.controller.ts
 
 const handleCallback = async (req: Request, res: Response) => {
-  const clientUrl = "http://localhost:3000";
+  const clientUrl = "https://developer-assessment-platform-delta.vercel.app";
 
   try {
     const result = await PaymentService.handleCallback(req.query as any);
