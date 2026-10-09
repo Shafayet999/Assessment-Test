@@ -24,11 +24,10 @@ const allowedOrigins = [
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
-    // Postman/Server-to-Server, লোকালহোস্ট, নির্দিষ্ট ফ্রন্টএন্ড বা *.vercel.app অ্যালাউ করা
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
       callback(null, true);
     } else {
-      callback(null, false); // 500 error throw না করে ক্লিনভাবে রিজেক্ট করবে
+      callback(null, false);
     }
   },
   credentials: true,
@@ -36,16 +35,15 @@ const corsOptions: cors.CorsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// CORS Middleware
+// 1. CORS Middleware (এটি একাই OPTIONS সহ সব রিকোয়েস্ট প্রসেস করবে)
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
-// Enable URL-encoded form data parsing & JSON bodies
+// 2. Body Parsers
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// Application Routes
+// 3. API Routes
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/assessments", AssessmentRoutes);
 app.use("/api/v1/submissions", SubmissionRoutes);
