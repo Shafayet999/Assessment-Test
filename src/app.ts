@@ -19,10 +19,13 @@ import { AdminRoutes } from "./app/module/admin/admin.route";
 const app: Application = express();
 
 app.use(
-	cors({
-		origin: true,
-		credentials: true,
-	}),
+  cors({
+    origin: [
+      "http://localhost:3000", 
+      "https://coding-platform-henna.vercel.app",
+    ],
+    credentials: true, 
+  })
 );
 
 // Enable URL-encoded form data parsing

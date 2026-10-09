@@ -163,10 +163,14 @@ const submitAssessment = async (
     throw new Error("This assessment has already been submitted!");
   }
 
-  // প্রশ্নগুলোর সঠিক উত্তরের একটি ম্যাপ তৈরি
+  // 🔍 ফিক্স ১: question.id এবং assessmentQuestion.id উভয় দিয়েই ম্যাপ রেজিস্টার করা
   const questionMap = new Map();
   attempt.assessment.questions.forEach((item) => {
-    questionMap.set(item.question.id, item.question);
+    questionMap.set(item.question.id, item.question); // আসল Question ID
+    questionMap.set(item.id, item.question);          // Join Table ID
+    if (item.questionId) {
+      questionMap.set(item.questionId, item.question);
+    }
   });
 
   let totalCalculatedScore = 0;
@@ -180,25 +184,25 @@ const submitAssessment = async (
 
     if (question) {
       if (question.type === QuestionType.MCQ) {
-        // MCQ হলে সরাসরি সঠিক উত্তরের সাথে মিলিয়ে অটো মার্কিং
         if (
           question.correctAnswer &&
-          question.correctAnswer.trim().toLowerCase() === ans.answerText.trim().toLowerCase()
+          question.correctAnswer.trim().toLowerCase() ===
+            ans.answerText.trim().toLowerCase()
         ) {
           obtainedMarks = question.marks;
         }
         isEvaluated = true;
       } else {
-        // কোডিং বা রিটেন প্রশ্নের জন্য প্রাথমিক অবস্থায় ০ মার্কস (রিক্রুটার পরে ম্যানুয়াল রিভিউ করবে)
         obtainedMarks = 0;
         isEvaluated = false;
       }
 
       totalCalculatedScore += obtainedMarks;
 
+      // 🔍 ফিক্স ২: ডেটাবেজ সেভের সময় সবসময় নিশ্চিত আসল question.id পাস করা
       submissionsData.push({
         candidateAssessmentId: attempt.id,
-        questionId: ans.questionId,
+        questionId: question.id, // ans.questionId এর বদলে question.id
         answerText: ans.answerText,
         obtainedMarks,
         isEvaluated,
@@ -208,7 +212,6 @@ const submitAssessment = async (
 
   // ডাটাবেস ট্রানজ্যাকশন: সব সাবমিশন সেভ এবং টোটাল স্কোর আপডেট
   const result = await prisma.$transaction(async (tx) => {
-    // সাবমিশনগুলো তৈরি করা
     for (const sub of submissionsData) {
       await tx.submission.upsert({
         where: {
@@ -226,7 +229,6 @@ const submitAssessment = async (
       });
     }
 
-    // ক্যান্ডিডেট অ্যাসেসমেন্ট স্ট্যাটাস এবং ফাইনাল স্কোর আপডেট
     const updatedAttempt = await tx.candidateAssessment.update({
       where: { id: attempt.id },
       data: {
